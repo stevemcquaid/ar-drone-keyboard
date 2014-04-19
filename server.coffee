@@ -6,6 +6,9 @@ control = arDrone.createUdpControl()
 start = Date.now()
 ref = {}
 pcmd = {}
+
+animationInProgress = 0
+animationTimer = 0
 animationName = ""
 animationDuration = 1000
 
@@ -30,6 +33,11 @@ class Drone
   constructor: (speed) ->
     @speed = speed
     @accel = 0.01
+
+    animationTimer = 0
+    animationName = ""
+    animationDuration = 1000
+
   takeoff: ->
     console.log "Takeoff ..."
     ref.emergency = false
@@ -57,34 +65,46 @@ class Drone
     @speed -= @accel
     console.log @speed
 
+  randomTrick: =>
+    if (animationTimer <= 0)
+      animationTimer = 1000 #set delay before next animation can be triggered
+      animations = [
+        "theta20degYaw200deg", "theta20degYawM200deg", "turnaround", "turnaroundGodown", 
+        "vzDance", "wave", "phiThetaMixed", "doublePhiThetaMixed"
+      ];
+      animationName = animations[Math.floor(Math.random() * animations.length)]
+      animationDuration = 1000
+      console.log animationName #what trick are we doing?
+
   flip: =>
-    console.log "FLIPPPING ..."
-    animationName = "flipAhead"
-    animationDuration = 1000
+    if (animationTimer <= 0)
+      animationTimer = 3000 #set delay before next animation can be triggered
+      animations = [
+        "flipAhead", "flipBehind", "flipLeft", "flipRight"
+      ];
+      animationName = animations[Math.floor(Math.random() * animations.length)]
+      animationDuration = 1000
+      console.log animationName #what trick are we doing?
 
 setInterval (->
   control.ref ref
   control.pcmd pcmd
-  console.log animationName
-  if !!animationName
-    #not empty animate object
-    console.log animationName
-    console.log animationDuration
-    console.log "Hi there"
-    
-    #control.animate( animationName, animationDuration)
+  if (animationTimer > 0)
+    animationTimer -= 30
 
-    console.log "FLIPPPING COMPLETE"
+  if (animationName != "" && animationTimer <= 0)
+    #animation can only happen once per 1000 seconds
+    control.animate(animationName, animationDuration)
     #reset vars after flip
-    #animationName = ""
-    #animationDuration = 1000
+    animationName = ""
+    animationDuration = 1000
 
   control.flush()
 ), 30
 
 drone = new Drone(0.5)
 
-drone.speed = 0.4
+drone.speed = 1.1
 
 console.log drone 
 
@@ -96,4 +116,5 @@ io.sockets.on "connection", (socket) ->
   socket.on "command", drone.commands
   socket.on "increaseSpeed", drone.increaseSpeed
   socket.on "decreaseSpeed", drone.decreaseSpeed
+  socket.on "randomTrick", drone.randomTrick
   socket.on "flip", drone.flip

@@ -38,8 +38,8 @@
   var timer
   var log
   var mapping = {
-    'space': 'takeoff',
-    'x' : 'land',
+    'x': 'takeoff',
+    'space' : 'land',
     'w' : 'front',
     's' : 'back',
     'a' : 'left',
@@ -49,6 +49,7 @@
     'i' : 'up',
     'k' : 'down',
     'f' : 'flip',
+    't' : 'randomTrick',
     'dash': 'decreaseSpeed',
     'equal': 'increaseSpeed',
   }
@@ -91,6 +92,8 @@
           socket.emit('decreaseSpeed');
         } else if(commands[0] === 'flip'){
           socket.emit('flip');
+        } else if(commands[0] === 'randomTrick'){
+          socket.emit('randomTrick');
         } else{
           socket.emit('command', commands);
         }
