@@ -48,6 +48,7 @@
     'l' : 'clockwise',
     'i' : 'up',
     'k' : 'down',
+    'f' : 'flip',
     'dash': 'decreaseSpeed',
     'equal': 'increaseSpeed',
   }
@@ -88,6 +89,8 @@
           socket.emit('increaseSpeed');
         } else if(commands[0] === 'decreaseSpeed'){
           socket.emit('decreaseSpeed');
+        } else if(commands[0] === 'flip'){
+          socket.emit('flip');
         } else{
           socket.emit('command', commands);
         }

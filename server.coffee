@@ -6,6 +6,9 @@ control = arDrone.createUdpControl()
 start = Date.now()
 ref = {}
 pcmd = {}
+animationName = ""
+animationDuration = 1000
+
 app = express()
 
 app.configure ->
@@ -54,9 +57,28 @@ class Drone
     @speed -= @accel
     console.log @speed
 
+  flip: =>
+    console.log "FLIPPPING ..."
+    animationName = "flipAhead"
+    animationDuration = 1000
+
 setInterval (->
   control.ref ref
   control.pcmd pcmd
+  console.log animationName
+  if !!animationName
+    #not empty animate object
+    console.log animationName
+    console.log animationDuration
+    console.log "Hi there"
+    
+    #control.animate( animationName, animationDuration)
+
+    console.log "FLIPPPING COMPLETE"
+    #reset vars after flip
+    #animationName = ""
+    #animationDuration = 1000
+
   control.flush()
 ), 30
 
@@ -74,3 +96,4 @@ io.sockets.on "connection", (socket) ->
   socket.on "command", drone.commands
   socket.on "increaseSpeed", drone.increaseSpeed
   socket.on "decreaseSpeed", drone.decreaseSpeed
+  socket.on "flip", drone.flip
