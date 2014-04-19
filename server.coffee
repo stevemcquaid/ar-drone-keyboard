@@ -78,7 +78,7 @@ class Drone
 
   flip: =>
     if (animationTimer <= 0)
-      animationTimer = 3000 #set delay before next animation can be triggered
+      animationTimer = 2000 #set delay before next animation can be triggered
       animations = [
         "flipAhead", "flipBehind", "flipLeft", "flipRight"
       ];
