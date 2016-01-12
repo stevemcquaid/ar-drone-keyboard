@@ -2,7 +2,7 @@
   "name": "ar-drone-keyboard",
   "version": "0.0.1",
   "dependencies": {
-    "express": ">=0",
+    "express": "^3.21.2",
     "coffee-script": ">=0",
     "ejs":  ">=0",
     "ar-drone":  ">=0",
